@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Flyway: drivers pay a flat monthly fee and keep 100% of every fare and tip. One upfront price for riders, no surge.">
+<meta name="robots" content="noindex">
+<title>Flyway</title>
+<style>
+  :root{
+    --paper:#F7F7F8; --paper-2:#FFFFFF; --paper-3:#EEEEF0;
+    --ink:#111114; --ink-2:#44444B; --ink-3:#74747D;
+    --rule:#DEDEE3;
+    --green:#16794F; --green-2:#0F5C3B; --green-tint:#E6F4EC;
+    --ochre:#C8372D; --ochre-tint:#FBEBEA;
+    --display:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1080px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E0E10; --paper-2:#161619; --paper-3:#1E1E22;
+      --ink:#F1F1F3; --ink-2:#B9B9C1; --ink-3:#8A8A94;
+      --rule:#2A2A30;
+      --green:#4CC38A; --green-2:#74D6A8; --green-tint:#10261B;
+      --ochre:#F0645A; --ochre-tint:#2B1513;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E0E10; --paper-2:#161619; --paper-3:#1E1E22;
+    --ink:#F1F1F3; --ink-2:#B9B9C1; --ink-3:#8A8A94;
+    --rule:#2A2A30;
+    --green:#4CC38A; --green-2:#74D6A8; --green-tint:#10261B;
+    --ochre:#F0645A; --ochre-tint:#2B1513;
+  }
+
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6;margin:0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:20px}
+  h1,h2,h3,.lbl{font-family:var(--display);text-wrap:balance}
+  h1{font-size:clamp(38px,6.6vw,74px);line-height:1.02;letter-spacing:-.035em;font-weight:800;margin:0 0 20px}
+  h2{font-size:clamp(26px,3.6vw,38px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin:0 0 14px}
+  h3{font-size:19px;line-height:1.3;letter-spacing:-.01em;font-weight:600;margin:0 0 6px}
+  p{margin:0 0 14px}
+  .lede{font-size:clamp(18px,2.1vw,21px);color:var(--ink-2);max-width:62ch}
+  .sm{font-size:14.5px;color:var(--ink-3);line-height:1.5}
+  .lbl{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  a{color:var(--green);text-decoration:none;border-bottom:1px solid var(--rule)}
+  a:hover{border-color:var(--green)}
+  section{padding-block:clamp(48px,7vw,84px);border-top:1px solid var(--rule)}
+  section:first-of-type{border-top:none}
+
+  /* ---- status banner: this company has not launched ---- */
+  .status{background:var(--ochre-tint);border-bottom:1px solid var(--rule)}
+  .status .wrap{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;padding-block:9px}
+  .status b{font-family:var(--display);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre)}
+  .status span{font-size:14px;color:var(--ink-2)}
+
+  /* ---- nav ---- */
+  nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+  nav .wrap{display:flex;align-items:center;gap:22px;padding-block:13px;flex-wrap:wrap}
+  .logo{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.04em;color:var(--ink);border:none}
+  .logo i{color:var(--green);font-style:normal}
+  .navlinks{display:flex;gap:18px;margin-left:auto;flex-wrap:wrap}
+  .navlinks a{font-family:var(--display);font-weight:500;font-size:14px;color:var(--ink-2);border:none}
+  .navlinks a:hover{color:var(--green)}
+
+  /* ---- hero ---- */
+  .hero{padding-block:clamp(44px,7vw,76px) clamp(40px,6vw,64px)}
+  .claim{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:26px}
+  .claim div{flex:1 1 180px}
+  .claim .big{font-family:var(--mono);font-weight:500;font-size:clamp(30px,4.4vw,42px);letter-spacing:-.03em;color:var(--green);line-height:1}
+  .claim .big.neg{color:var(--ochre)}
+  .claim p{margin:6px 0 0}
+
+  /* ---- receipt ---- */
+  .receipt{background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:clamp(22px,3.4vw,34px);max-width:620px}
+  .receipt h3{font-family:var(--mono);font-weight:500;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px}
+  .line{display:flex;align-items:baseline;gap:8px;padding-block:7px;font-size:16px}
+  .line .dots{flex:1;border-bottom:1px dotted var(--rule);transform:translateY(-4px)}
+  .line .v{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .line.tot{border-top:1px solid var(--ink);margin-top:10px;padding-top:12px;font-weight:600}
+  .line.tot .v{font-size:19px}
+  .good{color:var(--green)} .bad{color:var(--ochre)}
+  .two{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:start}
+
+  /* ---- calculator ---- */
+  .calc{background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:clamp(20px,3.2vw,32px)}
+  .fields{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  label{display:block;font-family:var(--display);font-size:12.5px;font-weight:600;letter-spacing:.03em;color:var(--ink-2);margin-bottom:5px}
+  input,select{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:16px}
+  input:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+  .out{margin-top:26px;padding-top:22px;border-top:1px solid var(--rule)}
+  .result{font-family:var(--mono);font-weight:500;font-size:clamp(34px,6vw,52px);letter-spacing:-.035em;line-height:1.05;color:var(--green)}
+  .result.no{color:var(--ochre)}
+  .breakdown{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:22px}
+  .breakdown .k{font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .breakdown .n{font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums}
+
+  /* ---- generic blocks ---- */
+  .grid{display:grid;gap:20px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .block{padding:22px;background:var(--paper-2);border:1px solid var(--rule);border-radius:8px}
+  .block.tint{background:var(--green-tint);border-color:transparent}
+  .steps{counter-reset:s;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .steps > div{position:relative;padding-top:34px}
+  .steps > div::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;font-family:var(--mono);font-size:13px;color:var(--green);border-top:2px solid var(--green);padding-top:7px;width:28px}
+  .plans{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .plan .price{font-family:var(--mono);font-size:34px;letter-spacing:-.03em;margin:4px 0 2px}
+  .plan ul{margin:12px 0 0;padding-left:18px;font-size:15.5px;color:var(--ink-2)}
+  .plan li{margin-bottom:5px}
+  .note{border-left:3px solid var(--ochre);background:var(--ochre-tint);padding:14px 18px;border-radius:0 4px 4px 0;font-size:15.5px}
+  .prose{max-width:66ch}
+  .prose p{color:var(--ink-2)}
+  footer{border-top:1px solid var(--rule);background:var(--paper-3);padding-block:34px;font-size:14.5px;color:var(--ink-3)}
+  footer .wrap{display:grid;gap:14px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  /* ---- try-the-app demo ---- */
+  .demo-head{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin-bottom:22px}
+  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;padding:4px 10px;border-radius:999px;background:var(--paper-3);color:var(--ink-2)}
+  .btn{font:inherit;font-weight:600;font-size:15px;padding:11px 16px;border-radius:10px;border:1px solid transparent;cursor:pointer;background:var(--green);color:#fff;width:100%}
+  .btn:hover{background:var(--green-2)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+  .btn.ghost:hover{border-color:var(--green);color:var(--green)}
+  .btn.small{width:auto;padding:8px 14px;font-size:14px}
+  .btn:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  .phones{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start}
+  .phone-col{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(100%,340px)}
+  .phone-cap{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .phone{width:100%;max-width:340px;height:640px;border-radius:38px;padding:12px;background:#17171b;box-shadow:0 18px 40px rgba(0,0,0,.18)}
+  .screen{height:100%;border-radius:28px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column;position:relative}
+  .sbar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 6px;font-size:12px;font-weight:600;color:var(--ink)}
+  .apphead{display:flex;justify-content:space-between;align-items:center;padding:6px 18px 12px;border-bottom:1px solid var(--rule);background:var(--paper-2)}
+  .apphead b{font-size:17px;letter-spacing:-.03em}
+  .apphead b i{font-style:normal;color:var(--green)}
+  .mode{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--green);color:#fff}
+  .app{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .app h4{margin:0;font-size:22px;letter-spacing:-.02em;line-height:1.15}
+  .app .muted{font-size:13px;color:var(--ink-3);line-height:1.45;margin:0}
+  .app .tile{background:var(--paper-2);border:1px solid var(--rule);border-radius:14px;padding:14px}
+  .app .tile.tint{background:var(--green-tint);border-color:transparent}
+  .app .tile.alert{border:2px solid var(--green)}
+  .trip-opt{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:left;font:inherit;font-size:14px;padding:12px;border-radius:12px;border:1px solid var(--rule);background:var(--paper-2);color:var(--ink);cursor:pointer}
+  .trip-opt[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset}
+  .trip-opt span{color:var(--ink-3);font-size:12.5px;white-space:nowrap}
+  .big{font-size:40px;font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+  .kv{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;font-variant-numeric:tabular-nums}
+  .kv.total{border-top:1px solid var(--rule);margin-top:6px;padding-top:8px;font-weight:700}
+  .spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--rule);border-top-color:var(--green);animation:spin 1s linear infinite;margin:18px auto 6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .plate{display:inline-block;font-weight:700;letter-spacing:.12em;padding:4px 10px;border:2px solid var(--ink);border-radius:6px;font-size:15px;margin:6px 0}
+  .bar{height:6px;border-radius:3px;background:var(--rule);overflow:hidden}
+  .bar>div{height:100%;background:var(--green);transition:width 1s linear}
+  .map{width:100%;height:auto;border-radius:12px;background:var(--paper-3);display:block}
+  .thumbs{display:flex;gap:8px}
+  .thumbs button{flex:1;font-size:20px;padding:8px;border-radius:10px;border:1px solid var(--rule);background:var(--paper-2);cursor:pointer}
+  .thumbs button[aria-pressed="true"]{border-color:var(--green);background:var(--green-tint)}
+  .tiprow{display:flex;gap:8px}
+  .tiprow input{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit;font-size:15px}
+  .hint{font-size:13px;font-weight:600;color:var(--green);text-align:center;min-height:20px}
+  .idle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:20px}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  @media (prefers-reduced-motion:reduce){.spin,.dot{animation:none}.bar>div{transition:none}}
+  .phone-tabs{display:none;gap:4px;padding:4px;border-radius:12px;background:var(--paper-3);margin:0 auto 14px;max-width:340px}
+  .phone-tabs button{flex:1;font:inherit;font-weight:600;font-size:14px;padding:9px;border:0;border-radius:9px;background:transparent;color:var(--ink-2);cursor:pointer}
+  .phone-tabs button[aria-selected="true"]{background:var(--paper-2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .phone-tabs button.ping::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:6px;vertical-align:middle}
+  @media (max-width:760px){
+    .phone{height:600px}
+    .phone-tabs{display:flex}
+    .phone-cap{display:none}
+    .phones[data-show="rider"] .driver-col,.phones[data-show="driver"] .rider-col{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="status"><div class="wrap">
+  <b>Pre-launch</b>
+  <span>Flyway has not started operating. This page describes a company being built, not a service you can book today.</span>
+</div></div>
+
+<nav><div class="wrap">
+  <a class="logo" href="#top">Fly<i>way</i></a>
+  <div class="navlinks">
+    <a href="#try">Try it</a>
+    <a href="#math">The math</a>
+    <a href="#calc">Calculator</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#safety">Safety</a>
+    <a href="#story">Our story</a>
+    <a href="#team">Team</a>
+  </div>
+</div></nav>
+
+<section id="top" class="hero"><div class="wrap">
+  <p class="lbl">0% commission — permanently</p>
+  <h1>Your driver keeps every cent of the fare.</h1>
+  <p class="lede">Flyway drivers pay a flat monthly fee instead of a commission. They keep 100% of every fare and every tip. Riders get one upfront price that never surges, priced to come in under the big apps.</p>
+  <div class="claim">
+    <div><p class="big">0%</p><p class="sm">taken from the fare. Not a commission, not a “service fee,” not a processing markup.</p></div>
+    <div><p class="big neg">~40%</p><p class="sm">what the big apps take on average &mdash; and <b>65&ndash;70% on some individual rides</b>.</p></div>
+    <div><p class="big">99¢</p><p class="sm">the only fee riders pay. Flat. It never changes with the price of the trip.</p></div>
+  </div>
+</div></section>
+
+<section id="try"><div class="wrap">
+  <div class="demo-head">
+    <div>
+      <p class="lbl">Try the app</p>
+      <h2 style="margin-bottom:6px">See how it feels, from both sides.</h2>
+      <p class="lede" style="margin:0">Book on the rider&rsquo;s phone, then accept or decline on the driver&rsquo;s. Or press play and watch a whole trip.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <span class="badge">Demo &middot; simulated, no real rides or charges</span>
+      <button class="btn small" id="demo-play" type="button">&#9654; Watch a trip</button>
+      <button class="btn ghost small" id="demo-reset" type="button">Start over</button>
+    </div>
+  </div>
+  <div class="phone-tabs" role="tablist" aria-label="Choose which phone to show">
+    <button type="button" role="tab" id="tab-rider" aria-selected="true" data-show="rider">Rider</button>
+    <button type="button" role="tab" id="tab-driver" aria-selected="false" data-show="driver">Driver</button>
+  </div>
+  <div class="phones" id="phones" data-show="rider">
+    <div class="phone-col rider-col">
+      <span class="phone-cap">Rider</span>
+      <div class="phone" role="region" aria-label="Rider app demo">
+        <div class="screen">
+          <div class="sbar"><span>9:41</span><span>&#9679;&#9679;&#9679;</span></div>
+          <div class="apphead"><b>Fly<i>way</i></b><span class="mode">Ride</span></div>
+          <div class="app" id="rider" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-col driver-col">
+      <span class="phone-cap">Driver</span>
+      <div class="phone" role="region" aria-label="Driver app demo">
+        <div class="screen">
+          <div class="sbar"><span>9:41</span><span>&#9679;&#9679;&#9679;</span></div>
+          <div class="apphead"><b>Fly<i>way</i></b><span class="mode">Drive</span></div>
+          <div class="app" id="driver" aria-live="polite"></div>
+        </div>
+      </div>
+      <p class="hint" id="demo-hint"></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="math"><div class="wrap">
+  <p class="lbl">The arithmetic</p>
+  <h2>Remove the middleman and both sides win at once.</h2>
+  <p class="lede" style="margin-bottom:30px">When a 40% intermediary comes out, the surplus goes to the two people who were actually in the car. Here is one ordinary trip, counted both ways.</p>
+  <div class="two">
+    <div class="receipt">
+      <h3>Same trip · Uber or Lyft</h3>
+      <div class="line"><span>Rider pays</span><span class="dots"></span><span class="v">$20.00</span></div>
+      <div class="line"><span>Platform takes from the fare</span><span class="dots"></span><span class="v bad">−$8.00</span></div>
+      <div class="line"><span>Booking fee</span><span class="dots"></span><span class="v">—</span></div>
+      <div class="line"><span>Subscription</span><span class="dots"></span><span class="v">—</span></div>
+      <div class="line tot"><span>Driver nets</span><span class="dots"></span><span class="v">$12.00</span></div>
+    </div>
+    <div class="receipt">
+      <h3>Same trip · Flyway</h3>
+      <div class="line"><span>Rider pays</span><span class="dots"></span><span class="v">$17.99</span></div>
+      <div class="line"><span>Platform takes from the fare</span><span class="dots"></span><span class="v good">$0.00</span></div>
+      <div class="line"><span>Flat booking fee</span><span class="dots"></span><span class="v">$0.99</span></div>
+      <div class="line"><span>Subscription, over 150 trips</span><span class="dots"></span><span class="v">$1.33</span></div>
+      <div class="line tot"><span>Driver nets</span><span class="dots"></span><span class="v good">$15.67</span></div>
+    </div>
+  </div>
+  <p class="sm" style="margin-top:20px;max-width:66ch">Rider pays <strong>10% less</strong>. Driver earns <strong>31% more</strong>. Flyway Pro at $199 a month, spread across 150 trips — and the more you drive, the smaller that line gets. A commission does the opposite. Take-rate figures: <a href="https://www.nelp.org/insights-research/unpacking-uber-and-lyfts-predatory-take-rates/">National Employment Law Project</a>, July 2025.</p>
+</div></section>
+
+<section id="calc"><div class="wrap">
+  <p class="lbl">For drivers</p>
+  <h2>Run your own numbers.</h2>
+  <p class="lede" style="margin-bottom:26px">We show you the answer even when it isn’t flattering to us.</p>
+  <div class="calc">
+    <div class="fields">
+      <div><label for="hrs">Hours per week</label><input id="hrs" type="number" min="0" max="80" value="35"></div>
+      <div><label for="tph">Trips per hour</label><input id="tph" type="number" min="0" max="6" step="0.1" value="1.5"></div>
+      <div><label for="fare">Average fare ($)</label><input id="fare" type="number" min="0" max="200" value="18"></div>
+      <div><label for="take">What your app takes (%)</label><input id="take" type="number" min="0" max="60" value="27"></div>
+      <div><label for="plan">Flyway plan</label><select id="plan">
+        <option value="129">Starter — $129/mo</option>
+        <option value="199" selected>Pro — $199/mo</option>
+        <option value="349">Covered — $349/mo</option>
+      </select></div>
+    </div>
+    <div class="out">
+      <p class="sm" id="cap" style="margin:0">You would keep an extra</p>
+      <p class="result" id="res">$1,064 / month</p>
+      <p id="sub" style="color:var(--ink-2);margin-top:4px">That’s <strong>$12,764 a year</strong>, on the same driving you already do.</p>
+      <div class="breakdown">
+        <div><p class="k">Monthly fares</p><p class="n" id="gross">$4,676</p></div>
+        <div><p class="k">Commission today</p><p class="n bad" id="comm">$1,263</p></div>
+        <div><p class="k">Flyway costs you</p><p class="n" id="cost">$199</p></div>
+        <div><p class="k">Effective rate</p><p class="n" id="eff">4.3%</p></div>
+      </div>
+      <p class="sm" id="pertrip" style="margin-top:18px">About <strong>227 trips</strong> a month — your subscription works out to <strong>$0.88</strong> per trip. Drive more and that shrinks. A commission never does.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <p class="lbl">The product</p>
+  <h2>One fair price. All of it goes to your driver.</h2>
+  <p class="lede" style="margin-bottom:30px">Flyway sets one upfront price from published rates. You see it before you book, it never surges, and the whole fare goes to the driver.</p>
+  <div class="steps">
+    <div><h3>Say where you&rsquo;re going</h3><p class="sm">Pickup and destination, like any ride app.</p></div>
+    <div><h3>See one price</h3><p class="sm">Priced from the published rates for your area &mdash; base, per mile, per minute &mdash; with the full total shown before you book.</p></div>
+    <div><h3>Request your ride</h3><p class="sm">The price locks. The nearest available driver gets the trip and sees exactly what they&rsquo;ll earn.</p></div>
+    <div><h3>Pay what you were quoted</h3><p class="sm">No surge, no changes for traffic or route. The fare goes to your driver in full.</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:30px">
+    <div class="block"><h3>Published rates</h3><p class="sm" style="margin:0">The same rate card for every driver and every rider in an area. Anyone can see how a fare is worked out.</p></div>
+    <div class="block"><h3>No surge, in code</h3><p class="sm" style="margin:0">A late-night rate can exist, but it&rsquo;s published in advance and capped. Nothing raises your price because demand spiked.</p></div>
+    <div class="block"><h3>Drivers choose freely</h3><p class="sm" style="margin:0">A driver sees the fare before accepting and can decline any trip with no penalty. The next nearest driver is asked.</p></div>
+  </div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <p class="lbl">Pricing</p>
+  <h2>One flat fee. No commission.</h2>
+  <p class="lede" style="margin-bottom:28px">Every plan is unlimited. The difference is the tools, and who carries the insurance. First 60 days free on any plan.</p>
+  <div class="plans">
+    <div class="block plan">
+      <h3>Starter</h3><p class="price">$129</p><p class="sm" style="margin:0">Committed part-timers</p>
+      <ul><li>Unlimited trips</li><li>Keep 100% of fares and tips</li><li>See every fare before you accept</li><li>You carry your own rideshare endorsement</li></ul>
+    </div>
+    <div class="block plan tint">
+      <p class="lbl" style="margin:0 0 4px">Most drivers</p>
+      <h3>Pro</h3><p class="price">$199</p><p class="sm" style="margin:0">The one most people want</p>
+      <ul><li>Everything in Starter</li><li>Time-of-day, long-trip and airport rules</li><li>Earnings and pricing analytics</li><li>Priority matching and support</li></ul>
+    </div>
+    <div class="block plan">
+      <h3>Covered</h3><p class="price">$349</p><p class="sm" style="margin:0">If you can’t get your own endorsement</p>
+      <ul><li>Everything in Pro</li><li>Flyway provides primary commercial coverage</li><li>No separate endorsement needed</li></ul>
+    </div>
+  </div>
+  <div class="note" style="margin-top:26px">
+    <strong>Honest about who this isn’t for.</strong> If you only drive a few hours a week, a flat fee costs you more than a commission — our insurance cost is the same whether you drive five trips or five hundred. You need roughly <strong>$478 a month in fares</strong> to come out ahead on Starter. Check the calculator before you sign up. We would rather lose the sale.
+  </div>
+</div></section>
+
+<section id="ratings"><div class="wrap">
+  <p class="lbl">Ratings and tips</p>
+  <h2>Calmer by design.</h2>
+  <div class="grid g2" style="margin-top:22px">
+    <div class="block"><h3>👍 / 👎 — not a decimal score</h3><p class="sm" style="margin:0">No 4.87 hanging over anyone. Ratings run on a rolling 90 days, and nothing shows publicly until a driver has 20 rated trips.</p></div>
+    <div class="block"><h3>Nobody is deactivated over a rating</h3><p class="sm" style="margin:0">Deactivation needs a safety or legal cause, a written reason, and a real appeal to a person. Safety reports are handled separately from ratings entirely.</p></div>
+    <div class="block"><h3>Tips without the guilt</h3><p class="sm" style="margin:0">Asked once, after the trip only — never before or during. No preset high anchors. 100% to the driver.</p></div>
+    <div class="block"><h3>No surge</h3><p class="sm" style="margin:0">Your price locks when you request. It does not move for traffic, route, or the time it took. Published rates, capped in code.</p></div>
+  </div>
+</div></section>
+
+<section id="safety"><div class="wrap">
+  <p class="lbl">Safety</p>
+  <h2>The part we don’t cut corners on.</h2>
+  <p class="lede" style="margin-bottom:28px">A flat fee only stays sustainable if the platform is safe, so our commercial interest and your safety point the same way.</p>
+  <div class="grid g3">
+    <div class="block"><h3>Screened before driving</h3><p class="sm" style="margin:0">Criminal background check including the national sex offender registry, full driving record, and government-ID identity verification with a liveness check.</p></div>
+    <div class="block"><h3>Monitored continuously</h3><p class="sm" style="margin:0">Not an annual re-check. If a driver’s record changes we know within about a day — not up to 364 days later.</p></div>
+    <div class="block"><h3>Blocked automatically</h3><p class="sm" style="margin:0">If insurance, licence or inspection lapses, the driver cannot go online. Enforced in software, with no manual override.</p></div>
+    <div class="block"><h3>Masked phone numbers</h3><p class="sm" style="margin:0">You and your driver never see each other’s real number. Calls and texts route through a proxy.</p></div>
+    <div class="block"><h3>Emergency help built in</h3><p class="sm" style="margin:0">One button calls 911 with your location and trip details ready. Share your live trip with anyone you choose.</p></div>
+    <div class="block"><h3>Zero tolerance</h3><p class="sm" style="margin:0">Any credible report of drugs or alcohol means immediate suspension while we investigate. We suspend first and ask questions second.</p></div>
+  </div>
+</div></section>
+
+<section id="story"><div class="wrap">
+  <p class="lbl">Our story</p>
+  <h2>It started with a question drivers kept answering the same way.</h2>
+  <div class="prose" style="margin-top:20px">
+    <p>Ask a rideshare driver what they would change about their job and you hear the same answer, unprompted, almost every time: <em>they take too much.</em></p>
+    <p>Flyway began as an arithmetic problem. A driver grossing $56,000 a year in fares hands more than <b>$22,000</b> of it to a platform — every year, with no ceiling and no way out, because two companies control essentially the whole market.</p>
+    <p>What made it worse was that nobody could say exactly how much was being taken. Since the industry moved to “upfront pricing,” the rider pays one number, the driver is paid a different number calculated separately, and the gap between them changes trip to trip. That gap has grown from roughly 32% to 42% — and in 2025 Uber stopped publishing it at all.</p>
+    <h3 style="margin-top:28px">The obvious idea, and why it’s hard</h3>
+    <p>If the commission is the problem, remove the commission. Charge drivers a flat monthly fee for the software, publish one fair rate for every trip, and let drivers keep the whole fare.</p>
+    <p>Others tried. One company ran almost exactly this model and argued that because it only sold software it was not a transportation company at all, and did not need to register as one. It spent six years and millions of dollars losing that argument.</p>
+    <p>The lesson we took was precise, and it shaped everything since: <strong>the economics were the good idea; the legal theory was the bad idea.</strong> No transportation law in the United States requires a platform to take a cut of the fare. Charging a subscription was never the illegal part. Refusing to register was.</p>
+    <h3 style="margin-top:28px">So we do the boring thing</h3>
+    <p>Flyway registers as a transportation network company in every market before the first paid ride. We carry the statutory commercial insurance. We run background checks continuously rather than annually. We pay the per-ride fees cities charge. Then we price all of it into the subscription and publish the arithmetic.</p>
+    <p>It is less exciting than a fight with a regulator, and it is the only version of this company that can actually exist.</p>
+    <h3 style="margin-top:28px">What we’re trying not to become</h3>
+    <p>Every platform in this industry started out popular with drivers. The drift happens slowly — a fee here, an opaque adjustment there, each defensible on its own.</p>
+    <p>So we wrote the constraint into the engineering rules rather than the marketing: <strong>Flyway never takes a percentage of a fare or a tip.</strong> If a cost has to be recovered it goes into the subscription, or into a flat, visible fee, and we say so. We also intend to publish a monthly transparency report — average fares, driver earnings, wait times — including the months that look bad.</p>
+  </div>
+</div></section>
+
+<section id="team"><div class="wrap">
+  <p class="lbl">Leadership</p>
+  <h2>Who’s building this.</h2>
+  <p class="lede" style="margin-bottom:26px">We’re early, and we would rather show an honest org chart than a padded one.</p>
+  <div class="grid g2">
+    <div class="block">
+      <h3>Joseph Cohen</h3>
+      <p class="lbl" style="margin:2px 0 10px">Founder &amp; Chief Executive</p>
+      <p class="sm" style="margin:0">Started Flyway after modelling what commission-based ride-hailing actually costs the people driving. Background in data and analytics — which is how the company is run: the insurance structure, liquidity thresholds and driver retention are all modelled openly, and the model has already overturned decisions the plan treated as settled.</p>
+    </div>
+    <div class="block">
+      <h3>Roles we’re hiring</h3>
+      <p class="sm" style="margin:0 0 10px">Open seats, and we say so rather than implying they’re filled.</p>
+      <ul class="sm" style="margin:0;padding-left:18px">
+        <li><strong>Founding Engineer</strong> — full-stack and mobile</li>
+        <li><strong>City Operations Lead</strong> — must live in the launch city</li>
+        <li><strong>Trust &amp; Safety Lead</strong> — hired before launch</li>
+        <li><strong>Driver Success Lead</strong> — the human on the phone</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="block"><h3 style="color:var(--ink-3)">Transport regulatory counsel</h3><p class="sm" style="margin:0">Advisor seat open</p></div>
+    <div class="block"><h3 style="color:var(--ink-3)">Commercial insurance advisor</h3><p class="sm" style="margin:0">Advisor seat open</p></div>
+    <div class="block"><h3 style="color:var(--ink-3)">Marketplace operator</h3><p class="sm" style="margin:0">Advisor seat open</p></div>
+  </div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <p class="lbl">Get in touch</p>
+  <h2>We answer. That’s meant to be part of the difference.</h2>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="block"><h3>Drivers</h3><p class="sm" style="margin:0">Joining, pricing, documents, your account.</p></div>
+    <div class="block"><h3>Press &amp; investors</h3><p class="sm" style="margin:0">Media enquiries and investment conversations.</p></div>
+    <div class="block"><h3>Safety</h3><p class="sm" style="margin:0">Monitored 24/7 once we launch. In an emergency, call 911 first.</p></div>
+  </div>
+  <p class="sm" style="margin-top:20px">Contact details go live with the service. Until then, reach the founder directly.</p>
+</div></section>
+
+<footer><div class="wrap">
+  <p style="margin:0"><strong style="font-family:var(--display);color:var(--ink-2)">Flyway</strong> — a technology platform. Transportation is provided by independent drivers, who keep 100% of every fare and tip.</p>
+  <p style="margin:0">Flyway has not begun operating. Nothing on this page is an offer of transportation, employment, or investment. “Flyway” is a working name and is subject to trademark clearance.</p>
+</div></footer>
+
+<script>
+(function(){
+  var f=function(id){return document.getElementById(id);};
+  var usd=function(n){return n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});};
+  var ids=['hrs','tph','fare','take','plan'];
+
+  function calc(){
+    var hrs=+f('hrs').value||0, tph=+f('tph').value||0, fare=+f('fare').value||0,
+        take=+f('take').value||0, price=+f('plan').value;
+    var trips=hrs*tph*4.33, gross=trips*fare, comm=gross*(take/100),
+        net=comm-price, eff=gross>0?(price/gross)*100:0,
+        perTrip=trips>0?price/trips:price, breakEven=take>0?price/(take/100):0;
+
+    f('gross').textContent=usd(gross);
+    f('comm').textContent=usd(comm);
+    f('cost').textContent=usd(price);
+    f('eff').textContent=eff.toFixed(1)+'%';
+
+    if(net>0){
+      f('cap').textContent='You would keep an extra';
+      f('res').textContent=usd(net)+' / month';
+      f('res').className='result';
+      f('sub').innerHTML='That’s <strong>'+usd(net*12)+' a year</strong>, on the same driving you already do.';
+    }else{
+      f('cap').textContent='At this volume, Flyway is not for you yet';
+      f('res').textContent='Not yet';
+      f('res').className='result no';
+      f('sub').innerHTML='This plan would cost you <strong>'+usd(Math.abs(net))+' a month more</strong> than a '+take+'% commission. You would need about <strong>'+usd(breakEven)+'</strong> in monthly fares to come out ahead. We would rather tell you now than take your money.';
+    }
+    f('pertrip').innerHTML='About <strong>'+Math.round(trips)+' trips</strong> a month — your subscription works out to <strong>$'+perTrip.toFixed(2)+'</strong> per trip. Drive more and that shrinks. A commission never does.';
+  }
+
+  ids.forEach(function(id){
+    var el=f(id);
+    el.addEventListener('input',calc);
+    el.addEventListener('change',calc);
+  });
+  calc();
+})();
+</script>
+<script>
+/* Try-the-app demo. Entirely simulated in the browser: no server, no real rides, no charges.
+   Fares use the same published rate card and booking fee as the real product
+   (packages/shared/src/pricing.ts and types.ts). */
+(function () {
+  var RATE = { base: 300, perMile: 135, perMinute: 25, minimum: 700, airport: 400 };
+  var FEE = 99, OFFER_SECONDS = 15;
+  var TRIPS = [
+    { id: 'a', from: 'Central Station', to: 'University', miles: 3.2, minutes: 11, airport: false },
+    { id: 'b', from: 'Downtown', to: 'Airport', miles: 9.6, minutes: 21, airport: true },
+    { id: 'c', from: 'Riverside', to: 'Hospital', miles: 5.4, minutes: 15, airport: false }
+  ];
+  var YOU = { name: 'Dana', car: 'Black Honda Accord', plate: 'KX 482T', pickupMin: 3 };
+  var OTHER = { name: 'Sam', car: 'Grey Ford Fusion', plate: 'JR 905L', pickupMin: 5 };
+
+  function fareFor(t) {
+    var c = RATE.base + Math.round(RATE.perMile * t.miles) + Math.round(RATE.perMinute * t.minutes)
+          + (t.airport ? RATE.airport : 0);
+    return Math.max(c, RATE.minimum);
+  }
+  function usd(c) { return '$' + (c / 100).toFixed(2); }
+
+  var S, timers = [];
+  function later(fn, ms) { var id = setTimeout(fn, ms); timers.push(id); return id; }
+  function clearAll() { timers.forEach(clearTimeout); timers = []; }
+
+  function fresh() {
+    return { stage: 'pick', trip: TRIPS[0], who: null, byYou: false, declined: false,
+             left: OFFER_SECONDS, progress: 0, rated: null, tip: 0, tipDone: false, auto: false,
+             driverNote: '' };
+  }
+
+  var $r = document.getElementById('rider'), $d = document.getElementById('driver'),
+      $h = document.getElementById('demo-hint');
+
+  /* ---------------- rendering ---------------- */
+
+  function mapSvg(progress) {
+    // A simple street grid with the route and the car's position along it.
+    var pts = [[30, 120], [30, 70], [120, 70], [120, 35], [250, 35]];
+    var seg = [], total = 0;
+    for (var i = 1; i < pts.length; i++) {
+      var dx = pts[i][0] - pts[i-1][0], dy = pts[i][1] - pts[i-1][1];
+      var len = Math.sqrt(dx*dx + dy*dy); seg.push(len); total += len;
+    }
+    var target = total * progress, x = pts[0][0], y = pts[0][1];
+    for (var j = 0; j < seg.length; j++) {
+      if (target <= seg[j]) {
+        var f = seg[j] ? target / seg[j] : 0;
+        x = pts[j][0] + (pts[j+1][0] - pts[j][0]) * f; y = pts[j][1] + (pts[j+1][1] - pts[j][1]) * f; break;
+      }
+      target -= seg[j]; x = pts[j+1][0]; y = pts[j+1][1];
+    }
+    var grid = '';
+    for (var gx = 0; gx <= 280; gx += 45) grid += '<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="150" stroke="var(--rule)" stroke-width="5"/>';
+    for (var gy = 0; gy <= 150; gy += 35) grid += '<line x1="0" y1="'+gy+'" x2="280" y2="'+gy+'" stroke="var(--rule)" stroke-width="5"/>';
+    return '<svg class="map" viewBox="0 0 280 150" role="img" aria-label="Map showing your trip progress">'
+      + '<rect width="280" height="150" fill="var(--paper-3)"/>' + grid
+      + '<polyline points="' + pts.map(function (p) { return p.join(','); }).join(' ')
+      + '" fill="none" stroke="var(--green)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'
+      + '<circle cx="30" cy="120" r="6" fill="var(--ink)"/><circle cx="250" cy="35" r="6" fill="var(--ochre)"/>'
+      + '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="8" fill="var(--green)" stroke="#fff" stroke-width="3"/>'
+      + '</svg>';
+  }
+
+  function renderRider() {
+    var t = S.trip, fare = fareFor(t), total = fare + FEE, h = '';
+    if (S.stage === 'pick') {
+      h += '<h4>Where to?</h4><p class="muted">Pick a sample trip.</p>';
+      TRIPS.forEach(function (o) {
+        h += '<button class="trip-opt" type="button" data-act="pick" data-id="' + o.id + '" aria-pressed="'
+          + (o.id === t.id) + '">' + o.from + ' &rarr; ' + o.to + '<span>' + o.miles + ' mi</span></button>';
+      });
+      h += '<button class="btn" type="button" data-act="price">See price</button>';
+    } else if (S.stage === 'quote') {
+      h += '<p class="muted">' + t.from + ' &rarr; ' + t.to + '</p>'
+        + '<div class="big">' + usd(total) + '</div>'
+        + '<p class="muted">' + t.miles + ' mi &middot; about ' + t.minutes + ' min &middot; nearest driver ' + YOU.pickupMin + ' min away</p>'
+        + '<div class="tile"><div class="kv"><span>Fare</span><span>' + usd(fare) + '</span></div>'
+        + (t.airport ? '<div class="kv"><span class="muted">incl. airport fee</span><span class="muted">' + usd(RATE.airport) + '</span></div>' : '')
+        + '<div class="kv"><span>Booking fee</span><span>' + usd(FEE) + '</span></div>'
+        + '<div class="kv total"><span>Total</span><span>' + usd(total) + '</span></div></div>'
+        + '<div class="tile tint"><p style="margin:0;font-size:14px">Your driver receives <b>' + usd(fare) + '</b> &mdash; 100% of the fare.</p>'
+        + '<p class="muted" style="margin-top:4px">Locked when you request. No surge.</p></div>'
+        + '<button class="btn" type="button" data-act="request">Request ride &middot; ' + usd(total) + '</button>'
+        + '<button class="btn ghost" type="button" data-act="change">Change trip</button>';
+    } else if (S.stage === 'finding' || S.stage === 'offer') {
+      h += '<div class="spin" aria-hidden="true"></div><h4 style="text-align:center">Finding your driver</h4>'
+        + '<p class="muted" style="text-align:center">' + (S.declined
+            ? 'The nearest driver passed &mdash; that&rsquo;s fine, they can. Asking the next one&hellip;'
+            : 'Asking the nearest driver. If they can&rsquo;t take it, we ask the next one.') + '</p>'
+        + '<div class="tile"><div class="kv"><span>Price locked</span><span>' + usd(total) + '</span></div></div>';
+    } else if (S.stage === 'enroute' || S.stage === 'arrived' || S.stage === 'ontrip') {
+      var w = S.who, title = S.stage === 'enroute' ? w.name + ' is on the way'
+        : S.stage === 'arrived' ? w.name + ' is here' : 'On your way to ' + t.to;
+      h += '<h4>' + title + '</h4>' + mapSvg(S.stage === 'ontrip' ? S.progress : 0)
+        + '<div class="tile"><b>' + w.name + '</b><div class="muted">' + w.car + '</div>'
+        + '<div class="plate">' + w.plate + '</div><p class="muted">Check the plate before you get in.</p></div>'
+        + '<div class="kv"><span class="muted">Price locked</span><span>' + usd(total) + '</span></div>';
+    } else if (S.stage === 'done') {
+      h += '<h4>You&rsquo;ve arrived</h4>'
+        + '<div class="tile"><div class="kv"><span>Fare &rarr; ' + S.who.name + '</span><span>' + usd(fare) + '</span></div>'
+        + '<div class="kv"><span>Booking fee &rarr; Flyway</span><span>' + usd(FEE) + '</span></div>'
+        + (S.tipDone && S.tip ? '<div class="kv"><span>Tip &rarr; ' + S.who.name + '</span><span>' + usd(S.tip) + '</span></div>' : '')
+        + '<div class="kv total"><span>You paid</span><span>' + usd(total + (S.tipDone ? S.tip : 0)) + '</span></div></div>'
+        + '<div class="tile tint"><p style="margin:0;font-size:14px"><b>' + S.who.name + ' kept every cent of the fare.</b></p></div>'
+        + '<p class="muted">How was the ride?</p><div class="thumbs">'
+        + '<button type="button" data-act="rate" data-v="up" aria-label="Good ride" aria-pressed="' + (S.rated === 'up') + '">&#128077;</button>'
+        + '<button type="button" data-act="rate" data-v="down" aria-label="Not a good ride" aria-pressed="' + (S.rated === 'down') + '">&#128078;</button></div>';
+      if (!S.tipDone) {
+        h += '<p class="muted">Add a tip? 100% goes to ' + S.who.name + '.</p><div class="tiprow">'
+          + '<label for="demo-tip" style="position:absolute;left:-9999px">Tip amount in dollars</label>'
+          + '<input id="demo-tip" type="number" inputmode="decimal" min="0" step="0.5" placeholder="$ amount">'
+          + '<button class="btn small" type="button" data-act="tip">Add</button></div>'
+          + '<button class="btn ghost" type="button" data-act="notip">No thanks</button>';
+      } else {
+        h += '<p class="muted">' + (S.tip ? 'Tip sent &mdash; all of it to ' + S.who.name + '.' : 'No tip. That&rsquo;s fine.') + '</p>';
+      }
+      h += '<button class="btn ghost" type="button" data-act="again">Book another</button>';
+    }
+    $r.innerHTML = h;
+  }
+
+  function renderDriver() {
+    var t = S.trip, fare = fareFor(t), h = '';
+    var mine = S.byYou && S.who;
+    if (S.stage === 'offer') {
+      h += '<div class="tile alert"><p class="muted">New trip request &middot; ' + S.left + 's</p>'
+        + '<div class="big" style="margin:6px 0">' + usd(fare) + '</div>'
+        + '<p style="margin:0;font-size:14px">You keep all of it &mdash; 100% of the fare, plus any tip.</p>'
+        + '<div class="bar" style="margin:10px 0"><div style="width:' + (S.left / OFFER_SECONDS * 100) + '%"></div></div>'
+        + '<p class="muted">Pickup ' + YOU.pickupMin + ' min away &middot; ' + t.miles + ' mi trip</p>'
+        + '<p style="margin:4px 0 0;font-size:14px">' + t.from + ' &rarr; ' + t.to + '</p></div>'
+        + '<button class="btn" type="button" data-act="accept">Accept &middot; ' + usd(fare) + '</button>'
+        + '<button class="btn ghost" type="button" data-act="decline">Decline</button>'
+        + '<p class="muted" style="text-align:center">Declining is free. No acceptance-rate score.</p>';
+    } else if (mine && (S.stage === 'enroute' || S.stage === 'arrived' || S.stage === 'ontrip')) {
+      var label = S.stage === 'enroute' ? 'Heading to pickup' : S.stage === 'arrived' ? 'Waiting at pickup' : 'On trip';
+      h += '<h4>' + label + '</h4><p class="muted">' + (S.stage === 'ontrip' ? t.from + ' &rarr; ' + t.to : 'Pick up at ' + t.from) + '</p>'
+        + mapSvg(S.stage === 'ontrip' ? S.progress : 0)
+        + '<div class="kv"><span>You&rsquo;ll earn</span><b>' + usd(fare) + '</b></div>';
+      if (S.stage === 'enroute') h += '<button class="btn" type="button" data-act="arrive">I&rsquo;ve arrived</button>';
+      if (S.stage === 'arrived') h += '<button class="btn" type="button" data-act="start">Start trip</button>';
+      if (S.stage === 'ontrip') h += '<button class="btn" type="button" data-act="complete"' + (S.progress < 1 ? ' disabled' : '') + '>'
+        + (S.progress < 1 ? 'Driving&hellip;' : 'Complete trip') + '</button>';
+    } else if (mine && S.stage === 'done') {
+      var tip = S.tipDone ? S.tip : 0;
+      h += '<div class="tile tint"><p class="muted">Trip complete</p><div class="big">+' + usd(fare + tip) + '</div>'
+        + '<p style="margin:6px 0 0;font-size:14px">Fare ' + usd(fare) + (tip ? ' + tip ' + usd(tip) : '') + '. All of it is yours.</p></div>'
+        + '<div class="tile"><p style="margin:0;font-size:14px">If a platform took the documented 40% average, you&rsquo;d have kept <b>'
+        + usd(Math.round(fare * 0.6)) + '</b> of this fare.</p>'
+        + '<p class="muted" style="margin-top:4px">With Flyway you pay a flat monthly fee instead.</p></div>'
+        + (S.tipDone ? '' : '<p class="muted"><span class="dot"></span>Waiting to see if your rider tips&hellip;</p>');
+    } else {
+      h += '<div class="idle">';
+      if (S.driverNote) h += '<p class="muted" style="color:var(--ink-2)">' + S.driverNote + '</p>';
+      h += '<p style="margin:0;font-weight:600"><span class="dot"></span>You&rsquo;re online</p>'
+        + '<p class="muted">Trip requests appear here. You&rsquo;ll see the fare before you decide. Rates are published and the same for every driver.</p></div>';
+    }
+    $d.innerHTML = h;
+  }
+
+  function hint() {
+    var m = '';
+    if (S.auto) m = 'Playing a sample trip&hellip;';
+    else if (S.stage === 'pick') m = 'Start on the rider&rsquo;s phone.';
+    else if (S.stage === 'offer') m = 'Your turn: accept or decline on the driver&rsquo;s phone.';
+    else if (S.byYou && (S.stage === 'enroute' || S.stage === 'arrived')) m = 'You&rsquo;re driving &mdash; use the driver&rsquo;s phone.';
+    else if (S.stage === 'done' && !S.tipDone) m = 'Rate or tip on the rider&rsquo;s phone.';
+    $h.innerHTML = m;
+  }
+
+  /* On narrow screens only one phone fits, so show the one that needs the next tap. */
+  var $phones = document.getElementById('phones');
+  function needsDriver() {
+    return S.stage === 'offer' || (S.byYou && (S.stage === 'enroute' || S.stage === 'arrived' || S.stage === 'ontrip'));
+  }
+  function show(which) {
+    $phones.setAttribute('data-show', which);
+    ['rider', 'driver'].forEach(function (w) {
+      var tab = document.getElementById('tab-' + w);
+      tab.setAttribute('aria-selected', String(w === which));
+      tab.classList.toggle('ping', w !== which && (w === 'driver' ? needsDriver() : !needsDriver()));
+    });
+  }
+  var lastNeed = null;
+  function render() {
+    renderRider(); renderDriver(); hint();
+    var need = needsDriver() ? 'driver' : 'rider';
+    if (need !== lastNeed) { lastNeed = need; show(need); } else { show($phones.getAttribute('data-show')); }
+  }
+
+  /* ---------------- actions ---------------- */
+
+  function startOffer() {
+    S.stage = 'offer'; S.left = OFFER_SECONDS; S.driverNote = '';
+    (function tick() {
+      if (S.stage !== 'offer') return;
+      render();
+      if (S.left <= 0) { act('decline', { timedOut: true }); return; }
+      S.left -= 1; later(tick, 1000);
+    })();
+  }
+
+  function drive(onDone) {
+    S.progress = 0;
+    var steps = 30;
+    (function step(i) {
+      S.progress = Math.min(1, i / steps); render();
+      if (i < steps) later(function () { step(i + 1); }, 200); else if (onDone) onDone();
+    })(0);
+  }
+
+  function otherDriverRunsTrip() {
+    S.who = OTHER; S.byYou = false; S.stage = 'enroute'; render();
+    later(function () { S.stage = 'arrived'; render(); }, 2500);
+    later(function () { S.stage = 'ontrip'; drive(function () { later(function () { S.stage = 'done'; render(); }, 600); }); }, 4500);
+  }
+
+  function act(name, opts) {
+    opts = opts || {};
+    switch (name) {
+      case 'pick': S.trip = TRIPS.filter(function (o) { return o.id === opts.id; })[0] || TRIPS[0]; break;
+      case 'price': S.stage = 'quote'; break;
+      case 'change': S.stage = 'pick'; break;
+      case 'request': S.stage = 'finding'; S.declined = false; render(); later(startOffer, 1200); return;
+      case 'accept':
+        if (S.stage !== 'offer') return;
+        S.who = YOU; S.byYou = true; S.stage = 'enroute'; break;
+      case 'decline':
+        if (S.stage !== 'offer') return;
+        S.declined = true; S.stage = 'finding';
+        S.driverNote = opts.timedOut
+          ? 'That request timed out &mdash; treated like a decline. No penalty.'
+          : 'You declined. No penalty, no score. The trip went to the next nearest driver.';
+        render(); later(otherDriverRunsTrip, 1800); return;
+      case 'arrive': S.stage = 'arrived'; break;
+      case 'start': S.stage = 'ontrip'; render(); drive(); return;
+      case 'complete': if (S.progress < 1) return; S.stage = 'done'; break;
+      case 'rate': S.rated = opts.v; break;
+      case 'tip':
+        var input = document.getElementById('demo-tip');
+        var cents = Math.round(parseFloat((input && input.value) || opts.amount || '0') * 100);
+        if (!(cents > 0)) { if (input) input.focus(); return; }
+        S.tip = Math.min(cents, 50000); S.tipDone = true; break;
+      case 'notip': S.tip = 0; S.tipDone = true; break;
+      case 'again': reset(); return;
+    }
+    render();
+  }
+
+  function reset() { clearAll(); S = fresh(); lastNeed = null; render(); }
+
+  /* "Watch a trip": the same actions on a timer, for people who'd rather watch than tap. */
+  function play() {
+    reset(); S.auto = true; render();
+    var seq = [
+      [900, function () { act('pick', { id: 'c' }); }],
+      [1400, function () { act('price'); }],
+      [2200, function () { act('request'); }],
+      [2800, function () { act('accept'); }],
+      [2400, function () { act('arrive'); }],
+      [1800, function () { act('start'); }],
+      [6800, function () { act('complete'); }],
+      [1500, function () { act('rate', { v: 'up' }); }],
+      [1300, function () { act('tip', { amount: '3' }); }],
+      [400, function () { S.auto = false; render(); }]
+    ];
+    var at = 0;
+    seq.forEach(function (s) { at += s[0]; later(s[1], at); });
+  }
+
+  function onClick(e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    if (S.auto) return; // let the playback finish; "Start over" interrupts it
+    act(b.getAttribute('data-act'), { id: b.getAttribute('data-id'), v: b.getAttribute('data-v') });
+  }
+  $r.addEventListener('click', onClick);
+  $d.addEventListener('click', onClick);
+  $r.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.id === 'demo-tip') act('tip');
+  });
+  document.querySelectorAll('.phone-tabs [data-show]').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.getAttribute('data-show')); });
+  });
+  document.getElementById('demo-play').addEventListener('click', play);
+  document.getElementById('demo-reset').addEventListener('click', reset);
+
+  reset();
+})();
+</script>
+</body>
+</html>
